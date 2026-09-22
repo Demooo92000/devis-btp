@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevisElec — Générateur de devis pour électriciens</title>
+<meta name="description" content="Créez un devis électricien professionnel en quelques minutes : prestations courantes préremplies, calcul automatique, export PDF.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+
+<header class="topbar no-print">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">⚡</span>
+      <span class="brand-name">DevisElec</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="unlock-status" class="badge badge-free">Version gratuite</span>
+      <button id="btn-unlock" class="btn btn-accent">Débloquer la version pro</button>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <section class="panel form-panel no-print">
+
+    <details class="card" id="card-entreprise" open>
+      <summary>Mon entreprise</summary>
+      <div class="card-body grid-2">
+        <label>Nom de l'entreprise
+          <input type="text" id="ent-nom" placeholder="Ex : Dupont Électricité">
+        </label>
+        <label>SIRET
+          <input type="text" id="ent-siret" placeholder="123 456 789 00012">
+        </label>
+        <label class="span-2">Adresse
+          <input type="text" id="ent-adresse" placeholder="12 rue des Artisans, 75000 Paris">
+        </label>
+        <label>Téléphone
+          <input type="tel" id="ent-tel" placeholder="06 12 34 56 78">
+        </label>
+        <label>Email
+          <input type="email" id="ent-email" placeholder="contact@monentreprise.fr">
+        </label>
+        <label class="span-2">Logo (optionnel)
+          <input type="file" id="ent-logo" accept="image/*">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" id="card-client" open>
+      <summary>Client</summary>
+      <div class="card-body grid-2">
+        <label>Nom du client
+          <input type="text" id="cli-nom" placeholder="Ex : M. Martin">
+        </label>
+        <label>Date du devis
+          <input type="date" id="devis-date">
+        </label>
+        <label class="span-2">Adresse du chantier
+          <input type="text" id="cli-adresse" placeholder="5 avenue de la République, 75011 Paris">
+        </label>
+      </div>
+    </details>
+
+    <div class="card">
+      <div class="card-header-row">
+        <h2>Prestations</h2>
+        <button id="btn-add-ligne" class="btn btn-secondary">+ Ajouter une ligne</button>
+      </div>
+      <div class="card-body">
+        <datalist id="prestations-courantes"></datalist>
+        <div id="lignes-container" class="lignes-container"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body grid-2">
+        <label>TVA
+          <select id="tva-taux">
+            <option value="20">20 % (standard / neuf)</option>
+            <option value="10" selected>10 % (rénovation &gt; 2 ans)</option>
+            <option value="5.5">5,5 % (amélioration énergétique)</option>
+            <option value="0">0 % (auto-liquidation / export)</option>
+          </select>
+        </label>
+        <label>Remise (%)
+          <input type="number" id="remise" value="0" min="0" max="100" step="0.5">
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <button id="btn-reset" class="btn btn-ghost">Nouveau devis (réinitialiser les lignes)</button>
+    </div>
+
+  </section>
+
+  <section class="panel preview-panel">
+    <div class="preview-toolbar no-print">
+      <button id="btn-print" class="btn btn-primary">🖨️ Imprimer / Enregistrer en PDF</button>
+    </div>
+
+    <article id="devis-preview" class="devis-doc">
+      <header class="doc-header">
+        <div class="doc-emetteur">
+          <img id="preview-logo" class="doc-logo" alt="" hidden>
+          <div class="doc-emetteur-nom" id="preview-ent-nom">Votre entreprise</div>
+          <div class="doc-emetteur-details" id="preview-ent-details"></div>
+        </div>
+        <div class="doc-titre">
+          <h1>DEVIS</h1>
+          <div id="preview-numero">N° —</div>
+          <div id="preview-date">Date : —</div>
+        </div>
+      </header>
+
+      <section class="doc-client">
+        <div class="doc-client-label">Client</div>
+        <div id="preview-cli-nom">—</div>
+        <div id="preview-cli-adresse">—</div>
+      </section>
+
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th class="col-designation">Désignation</th>
+            <th class="col-qte">Qté</th>
+            <th class="col-pu">P.U. HT</th>
+            <th class="col-total">Total HT</th>
+          </tr>
+        </thead>
+        <tbody id="preview-lignes"></tbody>
+      </table>
+
+      <section class="doc-totaux">
+        <div class="doc-totaux-row"><span>Sous-total HT</span><span id="preview-sous-total">0,00 €</span></div>
+        <div class="doc-totaux-row" id="preview-remise-row" hidden><span>Remise</span><span id="preview-remise">0,00 €</span></div>
+        <div class="doc-totaux-row"><span id="preview-tva-label">TVA (10 %)</span><span id="preview-tva">0,00 €</span></div>
+        <div class="doc-totaux-row doc-total-final"><span>Total TTC</span><span id="preview-total-ttc">0,00 €</span></div>
+      </section>
+
+      <footer class="doc-footer">
+        <p>Devis valable 3 mois à compter de sa date d'émission. Bon pour accord, précédé de la mention manuscrite, date et signature du client.</p>
+        <p id="preview-watermark" class="watermark">Devis généré avec DevisElec — version gratuite</p>
+      </footer>
+    </article>
+  </section>
+
+</main>
+
+<dialog id="dialog-unlock">
+  <div class="dialog-body">
+    <h2>Débloquer DevisElec</h2>
+    <p>La version gratuite ajoute une mention « généré avec DevisElec » en bas de vos devis. Débloquez le compte pour la retirer définitivement, sur ce navigateur.</p>
+    <p class="price">19 € <span>paiement unique</span></p>
+    <a id="lien-stripe-unlock" class="btn btn-accent" href="#" target="_blank" rel="noopener">Débloquer maintenant</a>
+    <button id="dialog-unlock-close" class="btn btn-ghost">Fermer</button>
+    <p class="fine-print">Paiement sécurisé par Stripe. Après paiement, vous revenez automatiquement ici et la version pro est activée sur ce navigateur.</p>
+  </div>
+</dialog>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

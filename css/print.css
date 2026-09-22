@@ -1,0 +1,24 @@
+body * { visibility: hidden; }
+
+#devis-preview, #devis-preview * { visibility: visible; }
+
+.no-print { display: none !important; }
+
+#devis-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+body.unlocked #devis-preview .watermark {
+  display: none;
+}
+
+@page {
+  margin: 16mm;
+}
