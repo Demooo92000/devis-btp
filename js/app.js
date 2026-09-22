@@ -1,6 +1,14 @@
 // DevisElec — générateur de devis pour électriciens, 100% côté client (pas de backend en v1).
 // Tout est stocké en local (localStorage) sur l'appareil de l'utilisateur.
 
+// La CSP posée en <meta> dans index.html ne couvre pas frame-ancestors (ignoré par les
+// navigateurs hors en-tête HTTP, que GitHub Pages ne permet pas de définir). Filet best-effort
+// en attendant un hébergement qui permette de vrais en-têtes : contournable par un iframe
+// sandboxé sans allow-top-navigation, mais gratuit et sans risque de casse.
+if (window.top !== window.self) {
+  window.top.location = window.self.location;
+}
+
 // À configurer par 1GeleC : lien de paiement Stripe (Payment Link) pour le déblocage.
 // Success URL du Payment Link à régler sur : <url du site>/?unlocked=1
 const STRIPE_PAYMENT_LINK = '';
@@ -26,6 +34,11 @@ const PRESTATIONS = [
 
 const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
 const fmt = (n) => euros.format(Number.isFinite(n) ? n : 0);
+// Arrondir chaque ligne au centime AVANT de sommer : sinon le sous-total (somme des floats
+// bruts) peut différer de quelques centimes de ce qu'un client obtiendrait en additionnant
+// lui-même les totaux imprimés par ligne (chacun déjà arrondi individuellement à l'affichage).
+const roundCents = (n) => Math.round(n * 100) / 100;
+const ligneTotal = (l) => roundCents(l.qte * l.pu);
 
 let state = null;
 let ligneIdSeq = 1;
@@ -41,9 +54,19 @@ function defaultState() {
   };
 }
 
+function syncFormFromState() {
+  document.getElementById('cli-nom').value = state.client.nom;
+  document.getElementById('cli-adresse').value = state.client.adresse;
+  document.getElementById('devis-date').value = state.date;
+  document.getElementById('tva-taux').value = String(state.tvaTaux);
+  document.getElementById('remise').value = state.remise;
+}
+
 function init() {
   const savedDevis = Storage.getDevisState();
   state = savedDevis || defaultState();
+  if (!savedDevis) Storage.setDevisState(state); // fige le numéro tout de suite : un simple
+  // rechargement avant toute saisie ne doit pas en consommer un second.
   if (state.lignes.length) {
     ligneIdSeq = Math.max(...state.lignes.map((l) => l.id)) + 1;
   }
@@ -59,14 +82,16 @@ function init() {
     document.getElementById('preview-logo').hidden = false;
   }
 
-  document.getElementById('cli-nom').value = state.client.nom;
-  document.getElementById('cli-adresse').value = state.client.adresse;
-  document.getElementById('devis-date').value = state.date;
-  document.getElementById('tva-taux').value = String(state.tvaTaux);
-  document.getElementById('remise').value = state.remise;
+  syncFormFromState();
 
+  // Options ajoutées via la propriété .value (jamais interpolées dans du HTML) : PRESTATIONS
+  // est aujourd'hui une liste figée, mais si elle devient un jour dynamique, ce code reste sûr.
   const datalist = document.getElementById('prestations-courantes');
-  datalist.innerHTML = PRESTATIONS.map((p) => `<option value="${escapeHtml(p.label)}">`).join('');
+  PRESTATIONS.forEach((p) => {
+    const option = document.createElement('option');
+    option.value = p.label;
+    datalist.appendChild(option);
+  });
 
   wireEvents();
   checkUnlockFromURL();
@@ -100,7 +125,11 @@ function wireEvents() {
     persistAndRender();
   });
   document.getElementById('remise').addEventListener('input', (e) => {
-    state.remise = parseFloat(e.target.value) || 0;
+    // min/max sur l'input HTML ne suffisent pas (pas de <form>, et même avec un <form> la saisie
+    // clavier/collage n'est pas bloquée) : une remise hors [0,100] rendait TVA et total négatifs.
+    const clamped = Math.min(100, Math.max(0, parseFloat(e.target.value) || 0));
+    state.remise = clamped;
+    if (e.target.value !== '' && Number(e.target.value) !== clamped) e.target.value = clamped;
     persistAndRender();
   });
 
@@ -111,8 +140,11 @@ function wireEvents() {
 
   document.getElementById('btn-reset').addEventListener('click', () => {
     if (!confirm('Repartir sur un nouveau devis ? Les lignes actuelles seront perdues (les infos client et entreprise sont conservées).')) return;
-    const nom = state.client.nom;
+    const client = state.client; // le message promet de garder le client : on le reporte réellement.
     state = defaultState();
+    state.client = client;
+    syncFormFromState(); // date/TVA/remise reviennent aussi à leur valeur par défaut à l'écran,
+    // sinon le formulaire affiche l'ancienne TVA pendant que l'aperçu recalcule avec la nouvelle.
     persistAndRender();
   });
 
@@ -165,7 +197,7 @@ function renderLignes() {
       <input type="text" list="prestations-courantes" placeholder="Désignation de la prestation" data-field="designation">
       <input type="number" min="0" step="0.5" data-field="qte" aria-label="Quantité">
       <input type="number" min="0" step="0.01" data-field="pu" aria-label="Prix unitaire HT">
-      <span class="ligne-total">${fmt(ligne.qte * ligne.pu)}</span>
+      <span class="ligne-total">${fmt(ligneTotal(ligne))}</span>
       <button type="button" class="btn-danger-ghost" aria-label="Supprimer la ligne">✕</button>
     `;
 
@@ -183,19 +215,19 @@ function renderLignes() {
         puInput.value = match.prix;
       }
       Storage.setDevisState(state);
-      row.querySelector('.ligne-total').textContent = fmt(ligne.qte * ligne.pu);
+      row.querySelector('.ligne-total').textContent = fmt(ligneTotal(ligne));
       renderPreview();
     });
     qteInput.addEventListener('input', (e) => {
       ligne.qte = parseFloat(e.target.value) || 0;
       Storage.setDevisState(state);
-      row.querySelector('.ligne-total').textContent = fmt(ligne.qte * ligne.pu);
+      row.querySelector('.ligne-total').textContent = fmt(ligneTotal(ligne));
       renderPreview();
     });
     puInput.addEventListener('input', (e) => {
       ligne.pu = parseFloat(e.target.value) || 0;
       Storage.setDevisState(state);
-      row.querySelector('.ligne-total').textContent = fmt(ligne.qte * ligne.pu);
+      row.querySelector('.ligne-total').textContent = fmt(ligneTotal(ligne));
       renderPreview();
     });
     row.querySelector('.btn-danger-ghost').addEventListener('click', () => {
@@ -209,11 +241,11 @@ function renderLignes() {
 }
 
 function computeTotals() {
-  const sousTotal = state.lignes.reduce((sum, l) => sum + l.qte * l.pu, 0);
-  const remiseMontant = sousTotal * (state.remise / 100);
-  const baseTva = sousTotal - remiseMontant;
-  const tvaMontant = baseTva * (state.tvaTaux / 100);
-  const totalTTC = baseTva + tvaMontant;
+  const sousTotal = roundCents(state.lignes.reduce((sum, l) => sum + ligneTotal(l), 0));
+  const remiseMontant = roundCents(sousTotal * (state.remise / 100));
+  const baseTva = roundCents(sousTotal - remiseMontant);
+  const tvaMontant = roundCents(baseTva * (state.tvaTaux / 100));
+  const totalTTC = roundCents(baseTva + tvaMontant);
   return { sousTotal, remiseMontant, tvaMontant, totalTTC };
 }
 
@@ -237,7 +269,7 @@ function renderPreview() {
         <td>${escapeHtml(l.designation) || '—'}</td>
         <td class="col-qte">${l.qte}</td>
         <td class="col-pu">${fmt(l.pu)}</td>
-        <td class="col-total">${fmt(l.qte * l.pu)}</td>
+        <td class="col-total">${fmt(ligneTotal(l))}</td>
       </tr>
     `).join('');
 

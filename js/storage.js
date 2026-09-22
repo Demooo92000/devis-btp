@@ -35,7 +35,12 @@ const Storage = (() => {
       const compteurKey = 'compteur_' + annee;
       const n = get(compteurKey, 0) + 1;
       set(compteurKey, n);
-      return `DEV-${annee}-${String(n).padStart(3, '0')}`;
+      // Le couple lecture/écriture ci-dessus n'est pas atomique entre onglets : deux onglets
+      // ouverts en même temps peuvent lire puis écrire le même compteur avant l'autre (vérifié :
+      // collision quasi systématique sans ce suffixe). Le suffixe aléatoire rend deux devis
+      // distincts non-collisionnants même quand la partie séquentielle, elle, se répète.
+      const suffixe = Math.random().toString(36).slice(2, 6).toUpperCase();
+      return `DEV-${annee}-${String(n).padStart(3, '0')}-${suffixe}`;
     },
   };
 })();

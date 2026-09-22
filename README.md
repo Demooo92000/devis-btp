@@ -21,6 +21,23 @@ documenté pour AuditBTP : un utilisateur déterminé peut la contourner
 compte ni donnée sensible ; à durcir plus tard si le produit prend, avec un
 vrai backend de vérification.
 
+## Sécurité — revue du 2026-09-22
+
+Revue adversariale complète faite (lecture des 6 fichiers, historique git, exécution
+réelle en navigateur avec tentatives d'injection). Deux points vérifiés en direct et
+jugés non exploitables : le contournement du déblocage (`?unlocked=1`, voir
+ci-dessus — ne gate que la mention imprimée, aucune fonctionnalité ni donnée) et un
+logo SVG contenant un `<script>`/`onload=` forgé (rendu via `<img src="data:...">`,
+qui n'exécute jamais de script selon la spec SVG Integration — confirmé en pratique).
+
+Un vrai gap identifié : la CSP posée en `<meta>` dans `index.html` ne couvre **pas**
+`frame-ancestors` (les navigateurs l'ignorent hors en-tête HTTP), et GitHub Pages
+n'envoie pas non plus de `X-Frame-Options` — le site est donc réellement
+embarquable dans un iframe. Un filet best-effort (JS `frame-busting`, en tête de
+`js/app.js`) a été ajouté en attendant un hébergement qui permette de vrais en-têtes
+HTTP ; impact jugé faible dans tous les cas (pas de session/cookie à détourner, le
+paiement réel se fait sur une page Stripe séparée non embarquable).
+
 ## Avant mise en ligne réelle
 
 - Créer un Stripe Payment Link et renseigner son URL dans

@@ -19,6 +19,13 @@ body.unlocked #devis-preview .watermark {
   display: none;
 }
 
+/* Sans ça, un devis de 15 lignes coupe le bloc totaux en deux (sous-total en bas de page 1,
+   TVA/total seuls en haut d'une page 2 quasi vide), et un devis de 60 lignes rejette le
+   filigrane seul sur une 4e page pour une ligne de texte. Constaté en PDF réel, pas en aperçu écran. */
+.doc-totaux, .doc-footer {
+  break-inside: avoid;
+}
+
 @page {
   margin: 16mm;
 }

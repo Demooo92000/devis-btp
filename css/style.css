@@ -112,6 +112,9 @@ details[open] > summary::before { transform: rotate(90deg); }
   gap: 12px 16px;
 }
 .span-2 { grid-column: 1 / -1; }
+@media (max-width: 560px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
 
 label {
   display: flex;
@@ -192,8 +195,12 @@ input:focus, select:focus {
   gap: 16px;
 }
 .doc-logo { max-height: 60px; max-width: 180px; margin-bottom: 8px; }
-.doc-emetteur-nom { font-weight: 700; font-size: 1.1rem; }
-.doc-emetteur-details { color: var(--text-muted); font-size: 0.85rem; white-space: pre-line; }
+/* min-width: 0 nécessaire : sans ça, un enfant flex ne rétrécit jamais sous la largeur de son
+   contenu non cassable, même avec overflow-wrap — un nom d'entreprise collé sans espace poussait
+   toute la page en largeur (constaté : ~3460px de débordement avec 320 caractères). */
+.doc-emetteur { min-width: 0; }
+.doc-emetteur-nom { font-weight: 700; font-size: 1.1rem; overflow-wrap: break-word; }
+.doc-emetteur-details { color: var(--text-muted); font-size: 0.85rem; white-space: pre-line; overflow-wrap: break-word; }
 .doc-titre { text-align: right; }
 .doc-titre h1 { font-size: 1.6rem; letter-spacing: 0.05em; }
 .doc-titre div { color: var(--text-muted); font-size: 0.85rem; }
@@ -201,7 +208,10 @@ input:focus, select:focus {
 .doc-client { margin-bottom: 20px; }
 .doc-client-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 2px; }
 
-.doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+/* table-layout: fixed + largeurs figées sur les 3 colonnes numériques : sans ça, une désignation
+   avec un mot très long (sans espace) pousse toute la table au-delà de la largeur imprimable et
+   les colonnes numériques disparaissent hors page en PDF (constaté avec un token de 100+ caractères). */
+.doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
 .doc-table th {
   text-align: left;
   font-size: 0.75rem;
@@ -212,7 +222,8 @@ input:focus, select:focus {
   padding: 8px 6px;
 }
 .doc-table td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9; }
-.col-qte, .col-pu, .col-total { text-align: right; white-space: nowrap; }
+.col-designation { overflow-wrap: break-word; word-break: break-word; }
+.col-qte, .col-pu, .col-total { text-align: right; white-space: nowrap; width: 90px; }
 
 .doc-totaux { margin-left: auto; width: 280px; }
 .doc-totaux-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.9rem; }
