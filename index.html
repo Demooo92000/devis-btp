@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DevisElec — Générateur de devis pour électriciens</title>
-<meta name="description" content="Créez un devis électricien professionnel en quelques minutes : prestations courantes préremplies, calcul automatique, export PDF. Gratuit pour commencer.">
+<title>DevisBTP — Générateur de devis pour les artisans du bâtiment</title>
+<meta name="description" content="Créez un devis professionnel en quelques minutes, quel que soit votre métier du bâtiment : prestations courantes préremplies, calcul automatique, export PDF. Gratuit pour commencer.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'none';">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/style.css">
@@ -15,8 +15,8 @@
 <header class="topbar">
   <div class="topbar-inner">
     <a class="brand" href="index.html">
-      <span class="brand-mark">⚡</span>
-      <span class="brand-name">DevisElec</span>
+      <span class="brand-mark">🛠️</span>
+      <span class="brand-name">DevisBTP</span>
     </a>
     <a class="btn btn-primary" href="app.html">Créer mon devis</a>
   </div>
@@ -26,9 +26,10 @@
 
   <section class="lp-hero">
     <div class="lp-hero-text">
-      <h1>Vos devis électricien, prêts en 5 minutes</h1>
-      <p>Prestations courantes préremplies, calcul HT / TVA / TTC automatique,
-        export PDF prêt à envoyer. Gratuit pour commencer.</p>
+      <h1>Vos devis de chantier, prêts en 5 minutes</h1>
+      <p>Électricien, plombier, peintre, maçon, menuisier, carreleur, couvreur,
+        chauffagiste... Prestations courantes préremplies pour votre métier, calcul
+        HT / TVA / TTC automatique, export PDF prêt à envoyer. Gratuit pour commencer.</p>
       <a class="btn btn-primary btn-lg" href="app.html">Créer mon devis gratuitement →</a>
       <p class="lp-hero-note">Aucune inscription. Tout reste sur votre appareil.</p>
     </div>
@@ -37,7 +38,7 @@
       <article class="devis-doc lp-mockup">
         <header class="doc-header">
           <div class="doc-emetteur">
-            <div class="doc-emetteur-nom">Dupont Électricité</div>
+            <div class="doc-emetteur-nom">Dupont Rénovation</div>
             <div class="doc-emetteur-details">8 rue des Lilas, 69000 Lyon&#10;06 45 78 12 39</div>
           </div>
           <div class="doc-titre">
@@ -51,15 +52,15 @@
             <tr><th class="col-designation">Désignation</th><th class="col-qte">Qté</th><th class="col-pu">P.U. HT</th><th class="col-total">Total HT</th></tr>
           </thead>
           <tbody>
-            <tr><td>Point lumineux (va-et-vient)</td><td class="col-qte">2</td><td class="col-pu">65,00 €</td><td class="col-total">130,00 €</td></tr>
-            <tr><td>Prise de courant 16A</td><td class="col-qte">6</td><td class="col-pu">40,00 €</td><td class="col-total">240,00 €</td></tr>
-            <tr><td>Tableau électrique complet</td><td class="col-qte">1</td><td class="col-pu">950,00 €</td><td class="col-total">950,00 €</td></tr>
+            <tr><td>Peinture murs, 2 couches (par m²)</td><td class="col-qte">30</td><td class="col-pu">18,00 €</td><td class="col-total">540,00 €</td></tr>
+            <tr><td>Pose carrelage sol (par m²)</td><td class="col-qte">15</td><td class="col-pu">40,00 €</td><td class="col-total">600,00 €</td></tr>
+            <tr><td>Taux horaire main d'œuvre</td><td class="col-qte">6</td><td class="col-pu">50,00 €</td><td class="col-total">300,00 €</td></tr>
           </tbody>
         </table>
         <section class="doc-totaux">
-          <div class="doc-totaux-row"><span>Sous-total HT</span><span>1 320,00 €</span></div>
-          <div class="doc-totaux-row"><span>TVA (10 %)</span><span>132,00 €</span></div>
-          <div class="doc-totaux-row doc-total-final"><span>Total TTC</span><span>1 452,00 €</span></div>
+          <div class="doc-totaux-row"><span>Sous-total HT</span><span>1 440,00 €</span></div>
+          <div class="doc-totaux-row"><span>TVA (10 %)</span><span>144,00 €</span></div>
+          <div class="doc-totaux-row doc-total-final"><span>Total TTC</span><span>1 584,00 €</span></div>
         </section>
       </article>
     </div>
@@ -71,10 +72,12 @@
 
       <div class="lp-feature">
         <span class="lp-icon">
-          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 11 14 9 22 21 10 13 10 13 2" fill="currentColor"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/>
+          </svg>
         </span>
-        <h3>Prestations préremplies</h3>
-        <p>16 prestations électriques courantes avec prix indicatifs, à ajuster à vos tarifs en un clic.</p>
+        <h3>Adapté à votre métier</h3>
+        <p>Électricien, plombier, peintre, maçon, menuisier, carreleur, couvreur, chauffagiste : prestations préremplies pour votre métier, prix indicatifs à ajuster à vos tarifs en un clic.</p>
       </div>
 
       <div class="lp-feature">
@@ -111,7 +114,7 @@
           </svg>
         </span>
         <h3>Gratuit pour commencer</h3>
-        <p>Devis illimités gratuitement. Un seul paiement, à vie, pour retirer la mention DevisElec.</p>
+        <p>Devis illimités gratuitement. Un seul paiement, à vie, pour retirer la mention DevisBTP.</p>
       </div>
 
     </div>
@@ -122,8 +125,8 @@
     <div class="lp-steps-grid">
       <div class="lp-step">
         <span class="lp-step-num">1</span>
-        <h3>Renseignez votre entreprise</h3>
-        <p>Nom, coordonnées, logo — une fois pour toutes, réutilisé sur chaque devis.</p>
+        <h3>Choisissez votre métier</h3>
+        <p>Puis renseignez votre entreprise (nom, coordonnées, logo) — une fois pour toutes, réutilisé sur chaque devis.</p>
       </div>
       <div class="lp-step">
         <span class="lp-step-num">2</span>
@@ -146,7 +149,7 @@
 </main>
 
 <footer class="lp-footer">
-  <p>DevisElec — outil indépendant pour artisans électriciens.</p>
+  <p>DevisBTP — outil indépendant pour les artisans du bâtiment.</p>
 </footer>
 
 <script src="js/security.js"></script>

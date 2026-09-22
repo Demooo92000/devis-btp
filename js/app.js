@@ -1,5 +1,5 @@
-// DevisElec — générateur de devis pour électriciens, 100% côté client (pas de backend en v1).
-// Tout est stocké en local (localStorage) sur l'appareil de l'utilisateur.
+// DevisBTP — générateur de devis pour artisans du bâtiment, 100% côté client (pas de backend
+// en v1). Tout est stocké en local (localStorage) sur l'appareil de l'utilisateur.
 // Le filet anti-clickjacking vit dans js/security.js, chargé avant ce fichier (partagé avec
 // la page d'accueil, qui n'a pas besoin du reste de ce fichier).
 
@@ -7,24 +7,140 @@
 // Success URL du Payment Link à régler sur : <url du site>/?unlocked=1
 const STRIPE_PAYMENT_LINK = '';
 
-const PRESTATIONS = [
-  { label: 'Point lumineux (simple allumage)', prix: 45 },
-  { label: 'Point lumineux (va-et-vient)', prix: 65 },
-  { label: 'Prise de courant 16A', prix: 40 },
-  { label: 'Prise spécialisée 32A (four / plaque)', prix: 75 },
-  { label: 'Prise RJ45 / réseau', prix: 50 },
-  { label: 'Point de commande VMC', prix: 45 },
-  { label: 'Interrupteur simple', prix: 35 },
-  { label: 'Détecteur de fumée (DAAF) fourni posé', prix: 40 },
-  { label: "Tableau électrique complet (fourniture et pose, jusqu'à 3 rangées)", prix: 950 },
-  { label: 'Disjoncteur différentiel 30mA', prix: 95 },
-  { label: 'Disjoncteur divisionnaire', prix: 45 },
-  { label: 'Mise à la terre (piquet + liaison)', prix: 180 },
-  { label: 'Chemin de câbles / goulotte (par mètre)', prix: 12 },
-  { label: 'Forfait mise aux normes tableau électrique', prix: 650 },
-  { label: "Taux horaire main d'œuvre", prix: 55 },
-  { label: 'Forfait déplacement', prix: 40 },
-];
+// Un jeu de prestations courantes par corps de métier. Prix indicatifs de marché, pas une
+// source normative — point de départ à ajuster, y compris par l'utilisateur dans le formulaire.
+const METIERS = {
+  electricien: {
+    label: 'Électricien',
+    prestations: [
+      { label: 'Point lumineux (simple allumage)', prix: 45 },
+      { label: 'Point lumineux (va-et-vient)', prix: 65 },
+      { label: 'Prise de courant 16A', prix: 40 },
+      { label: 'Prise spécialisée 32A (four / plaque)', prix: 75 },
+      { label: 'Prise RJ45 / réseau', prix: 50 },
+      { label: 'Point de commande VMC', prix: 45 },
+      { label: 'Interrupteur simple', prix: 35 },
+      { label: 'Détecteur de fumée (DAAF) fourni posé', prix: 40 },
+      { label: "Tableau électrique complet (fourniture et pose, jusqu'à 3 rangées)", prix: 950 },
+      { label: 'Disjoncteur différentiel 30mA', prix: 95 },
+      { label: 'Disjoncteur divisionnaire', prix: 45 },
+      { label: 'Mise à la terre (piquet + liaison)', prix: 180 },
+      { label: 'Chemin de câbles / goulotte (par mètre)', prix: 12 },
+      { label: 'Forfait mise aux normes tableau électrique', prix: 650 },
+      { label: "Taux horaire main d'œuvre", prix: 55 },
+      { label: 'Forfait déplacement', prix: 40 },
+    ],
+  },
+  plombier: {
+    label: 'Plombier',
+    prestations: [
+      { label: 'Installation WC / cuvette', prix: 250 },
+      { label: 'Installation lavabo / vasque', prix: 200 },
+      { label: 'Installation douche (receveur + robinetterie)', prix: 450 },
+      { label: 'Installation baignoire', prix: 550 },
+      { label: 'Remplacement robinet / mitigeur', prix: 90 },
+      { label: 'Raccordement lave-linge / lave-vaisselle', prix: 80 },
+      { label: 'Débouchage canalisation', prix: 120 },
+      { label: 'Installation chauffe-eau', prix: 350 },
+      { label: 'Pose évier + mitigeur', prix: 220 },
+      { label: 'Recherche de fuite', prix: 150 },
+      { label: 'Tuyauterie (par mètre)', prix: 25 },
+      { label: "Taux horaire main d'œuvre", prix: 55 },
+      { label: 'Forfait déplacement', prix: 40 },
+    ],
+  },
+  peintre: {
+    label: 'Peintre',
+    prestations: [
+      { label: 'Peinture murs, 2 couches (par m²)', prix: 18 },
+      { label: 'Peinture plafond (par m²)', prix: 20 },
+      { label: 'Enduit / ragréage (par m²)', prix: 15 },
+      { label: 'Pose papier peint (par m²)', prix: 22 },
+      { label: 'Peinture boiserie (porte / fenêtre)', prix: 60 },
+      { label: 'Ponçage / préparation support (par m²)', prix: 8 },
+      { label: 'Peinture façade (par m²)', prix: 25 },
+      { label: 'Sous-couche / primaire (par m²)', prix: 6 },
+      { label: 'Protection sol et mobilier (forfait)', prix: 80 },
+      { label: "Taux horaire main d'œuvre", prix: 45 },
+      { label: 'Forfait déplacement', prix: 35 },
+    ],
+  },
+  menuisier: {
+    label: 'Menuisier',
+    prestations: [
+      { label: 'Pose porte intérieure', prix: 180 },
+      { label: 'Pose fenêtre PVC', prix: 450 },
+      { label: "Pose porte d'entrée", prix: 700 },
+      { label: 'Placard sur mesure (par mètre linéaire)', prix: 350 },
+      { label: 'Pose parquet (par m²)', prix: 45 },
+      { label: 'Pose plinthes (par mètre linéaire)', prix: 12 },
+      { label: 'Réparation / ajustement porte', prix: 90 },
+      { label: 'Pose volet roulant', prix: 380 },
+      { label: 'Pose escalier (forfait)', prix: 2500 },
+      { label: "Taux horaire main d'œuvre", prix: 50 },
+      { label: 'Forfait déplacement', prix: 35 },
+    ],
+  },
+  macon: {
+    label: 'Maçon',
+    prestations: [
+      { label: 'Dalle béton (par m²)', prix: 60 },
+      { label: 'Ouverture de mur porteur (avec IPN)', prix: 1200 },
+      { label: 'Cloison parpaing (par m²)', prix: 55 },
+      { label: 'Enduit façade (par m²)', prix: 35 },
+      { label: 'Chape (par m²)', prix: 30 },
+      { label: 'Fondation (par mètre linéaire)', prix: 150 },
+      { label: "Création d'ouverture (porte / fenêtre)", prix: 800 },
+      { label: 'Démolition cloison (par m²)', prix: 25 },
+      { label: "Taux horaire main d'œuvre", prix: 50 },
+      { label: 'Forfait déplacement', prix: 45 },
+    ],
+  },
+  carreleur: {
+    label: 'Carreleur',
+    prestations: [
+      { label: 'Pose carrelage sol (par m²)', prix: 40 },
+      { label: 'Pose faïence murale (par m²)', prix: 45 },
+      { label: 'Plinthes carrelage (par mètre linéaire)', prix: 15 },
+      { label: 'Ragréage avant pose (par m²)', prix: 15 },
+      { label: 'Pose mosaïque (par m²)', prix: 60 },
+      { label: 'Joints (par m²)', prix: 8 },
+      { label: 'Dépose ancien carrelage (par m²)', prix: 15 },
+      { label: "Taux horaire main d'œuvre", prix: 48 },
+      { label: 'Forfait déplacement', prix: 35 },
+    ],
+  },
+  couvreur: {
+    label: 'Couvreur',
+    prestations: [
+      { label: 'Pose tuiles (par m²)', prix: 55 },
+      { label: 'Pose ardoises (par m²)', prix: 70 },
+      { label: 'Zinguerie / gouttières (par mètre linéaire)', prix: 45 },
+      { label: 'Démoussage toiture (par m²)', prix: 12 },
+      { label: 'Pose fenêtre de toit', prix: 900 },
+      { label: 'Nettoyage gouttières (forfait)', prix: 150 },
+      { label: 'Réparation ponctuelle toiture (forfait)', prix: 250 },
+      { label: 'Pose écran sous-toiture (par m²)', prix: 18 },
+      { label: "Taux horaire main d'œuvre", prix: 55 },
+      { label: 'Forfait déplacement', prix: 45 },
+    ],
+  },
+  chauffagiste: {
+    label: 'Chauffagiste / Climaticien',
+    prestations: [
+      { label: 'Installation chaudière gaz', prix: 2500 },
+      { label: 'Installation pompe à chaleur', prix: 8000 },
+      { label: 'Pose radiateur', prix: 250 },
+      { label: 'Entretien chaudière annuel', prix: 120 },
+      { label: 'Purge / équilibrage circuit', prix: 90 },
+      { label: 'Installation thermostat connecté', prix: 200 },
+      { label: 'Ramonage', prix: 80 },
+      { label: 'Remplacement corps de chauffe', prix: 400 },
+      { label: "Taux horaire main d'œuvre", prix: 55 },
+      { label: 'Forfait déplacement', prix: 40 },
+    ],
+  },
+};
 
 const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
 const fmt = (n) => euros.format(Number.isFinite(n) ? n : 0);
@@ -36,6 +152,7 @@ const ligneTotal = (l) => roundCents(l.qte * l.pu);
 
 let state = null;
 let ligneIdSeq = 1;
+let currentMetier = 'electricien';
 
 function defaultState() {
   return {
@@ -54,6 +171,18 @@ function syncFormFromState() {
   document.getElementById('devis-date').value = state.date;
   document.getElementById('tva-taux').value = String(state.tvaTaux);
   document.getElementById('remise').value = state.remise;
+}
+
+function renderDatalist() {
+  // Options ajoutées via la propriété .value (jamais interpolées dans du HTML) : sûr même si
+  // une future source de prestations devient dynamique (saisie utilisateur, import...).
+  const datalist = document.getElementById('prestations-courantes');
+  datalist.innerHTML = '';
+  METIERS[currentMetier].prestations.forEach((p) => {
+    const option = document.createElement('option');
+    option.value = p.label;
+    datalist.appendChild(option);
+  });
 }
 
 function init() {
@@ -78,14 +207,17 @@ function init() {
 
   syncFormFromState();
 
-  // Options ajoutées via la propriété .value (jamais interpolées dans du HTML) : PRESTATIONS
-  // est aujourd'hui une liste figée, mais si elle devient un jour dynamique, ce code reste sûr.
-  const datalist = document.getElementById('prestations-courantes');
-  PRESTATIONS.forEach((p) => {
+  const metierSelect = document.getElementById('metier');
+  Object.entries(METIERS).forEach(([key, m]) => {
     const option = document.createElement('option');
-    option.value = p.label;
-    datalist.appendChild(option);
+    option.value = key;
+    option.textContent = m.label;
+    metierSelect.appendChild(option);
   });
+  currentMetier = Storage.getMetier();
+  if (!METIERS[currentMetier]) currentMetier = 'electricien'; // valeur de stockage inconnue/corrompue
+  metierSelect.value = currentMetier;
+  renderDatalist();
 
   wireEvents();
   checkUnlockFromURL();
@@ -101,6 +233,11 @@ function wireEvents() {
   document.getElementById('ent-tel').addEventListener('input', saveEntrepriseFromForm);
   document.getElementById('ent-email').addEventListener('input', saveEntrepriseFromForm);
   document.getElementById('ent-logo').addEventListener('change', handleLogoUpload);
+  document.getElementById('metier').addEventListener('change', (e) => {
+    currentMetier = e.target.value;
+    Storage.setMetier(currentMetier);
+    renderDatalist();
+  });
 
   document.getElementById('cli-nom').addEventListener('input', (e) => {
     state.client.nom = e.target.value;
@@ -203,7 +340,7 @@ function renderLignes() {
     puInput.value = ligne.pu;
     designationInput.addEventListener('input', (e) => {
       ligne.designation = e.target.value;
-      const match = PRESTATIONS.find((p) => p.label === e.target.value);
+      const match = METIERS[currentMetier].prestations.find((p) => p.label === e.target.value);
       if (match && !ligne.pu) {
         ligne.pu = match.prix;
         puInput.value = match.prix;

@@ -1,7 +1,8 @@
 // Petite couche autour de localStorage. Aucune donnée ne quitte le navigateur :
-// DevisElec n'a pas de backend en v1, tout est stocké en local chez l'utilisateur.
+// DevisBTP n'a pas de backend en v1, tout est stocké en local chez l'utilisateur.
 const Storage = (() => {
-  const PREFIX = 'deviselec_';
+  const PREFIX = 'deviselec_'; // clé de stockage historique (dépôt initial "devis-elec"),
+  // conservée pour ne pas perdre les données déjà enregistrées chez d'éventuels utilisateurs.
 
   function get(key, fallback) {
     try {
@@ -29,6 +30,9 @@ const Storage = (() => {
 
     isUnlocked: () => get('unlocked', false),
     setUnlocked: (v) => set('unlocked', v),
+
+    getMetier: () => get('metier', 'electricien'),
+    setMetier: (v) => set('metier', v),
 
     getNextNumero: () => {
       const annee = new Date().getFullYear();

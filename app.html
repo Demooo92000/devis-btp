@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Créer un devis — DevisElec</title>
-<meta name="description" content="Créez un devis électricien professionnel en quelques minutes : prestations courantes préremplies, calcul automatique, export PDF.">
+<title>Créer un devis — DevisBTP</title>
+<meta name="description" content="Créez un devis professionnel en quelques minutes, quel que soit votre métier du bâtiment : prestations courantes préremplies, calcul automatique, export PDF.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'none';">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/style.css">
@@ -15,8 +15,8 @@
 <header class="topbar no-print">
   <div class="topbar-inner">
     <a class="brand" href="index.html">
-      <span class="brand-mark">⚡</span>
-      <span class="brand-name">DevisElec</span>
+      <span class="brand-mark">🛠️</span>
+      <span class="brand-name">DevisBTP</span>
     </a>
     <div class="topbar-actions">
       <span id="unlock-status" class="badge badge-free">Version gratuite</span>
@@ -32,8 +32,11 @@
     <details class="card" id="card-entreprise" open>
       <summary>Mon entreprise</summary>
       <div class="card-body grid-2">
+        <label class="span-2">Métier
+          <select id="metier"></select>
+        </label>
         <label>Nom de l'entreprise
-          <input type="text" id="ent-nom" placeholder="Ex : Dupont Électricité">
+          <input type="text" id="ent-nom" placeholder="Ex : Dupont Bâtiment">
         </label>
         <label>SIRET
           <input type="text" id="ent-siret" placeholder="123 456 789 00012">
@@ -147,7 +150,7 @@
 
       <footer class="doc-footer">
         <p>Devis valable 3 mois à compter de sa date d'émission. Bon pour accord, précédé de la mention manuscrite, date et signature du client.</p>
-        <p id="preview-watermark" class="watermark">Devis généré avec DevisElec — version gratuite</p>
+        <p id="preview-watermark" class="watermark">Devis généré avec DevisBTP — version gratuite</p>
       </footer>
     </article>
   </section>
@@ -156,8 +159,8 @@
 
 <dialog id="dialog-unlock">
   <div class="dialog-body">
-    <h2>Débloquer DevisElec</h2>
-    <p>La version gratuite ajoute une mention « généré avec DevisElec » en bas de vos devis. Débloquez le compte pour la retirer définitivement, sur ce navigateur.</p>
+    <h2>Débloquer DevisBTP</h2>
+    <p>La version gratuite ajoute une mention « généré avec DevisBTP » en bas de vos devis. Débloquez le compte pour la retirer définitivement, sur ce navigateur.</p>
     <p class="price">19 € <span>paiement unique</span></p>
     <a id="lien-stripe-unlock" class="btn btn-accent" href="#" target="_blank" rel="noopener">Débloquer maintenant</a>
     <button id="dialog-unlock-close" class="btn btn-ghost">Fermer</button>
