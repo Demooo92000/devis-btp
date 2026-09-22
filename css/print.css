@@ -10,9 +10,20 @@ body * { visibility: hidden; }
   left: 0;
   width: 100%;
   border: none;
+  border-top: 4px solid var(--accent); /* le fin liseré de couleur en haut du document survit à
+    l'impression ; le reste (bordure grise, ombre) n'a pas sa place sur une page imprimée */
   box-shadow: none;
   padding: 0;
+  padding-top: 16px;
   margin: 0;
+}
+
+/* Sans ça, les navigateurs suppriment par défaut les couleurs de fond à l'impression pour
+   économiser l'encre — le liseré ci-dessus, l'en-tête de tableau et le total mis en avant
+   ressortiraient tout blancs sur le PDF exporté. */
+#devis-preview, #devis-preview * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 body.unlocked #devis-preview .watermark {

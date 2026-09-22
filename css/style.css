@@ -181,6 +181,7 @@ input:focus, select:focus {
 .devis-doc {
   background: #fff;
   border: 1px solid var(--border);
+  border-top: 5px solid var(--accent);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 32px;
@@ -189,8 +190,8 @@ input:focus, select:focus {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 2px solid var(--text);
-  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
   margin-bottom: 20px;
   gap: 16px;
 }
@@ -202,11 +203,24 @@ input:focus, select:focus {
 .doc-emetteur-nom { font-weight: 700; font-size: 1.1rem; overflow-wrap: break-word; }
 .doc-emetteur-details { color: var(--text-muted); font-size: 0.85rem; white-space: pre-line; overflow-wrap: break-word; }
 .doc-titre { text-align: right; }
-.doc-titre h1 { font-size: 1.6rem; letter-spacing: 0.05em; }
+.doc-titre h1 { font-size: 1.9rem; letter-spacing: 0.06em; color: var(--accent-dark); }
 .doc-titre div { color: var(--text-muted); font-size: 0.85rem; }
+.doc-titre div:first-of-type {
+  display: inline-block;
+  background: #ccfbf1;
+  color: var(--accent-dark);
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin: 6px 0 4px;
+}
 
-.doc-client { margin-bottom: 20px; }
-.doc-client-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 2px; }
+.doc-client {
+  margin-bottom: 20px;
+  border-left: 3px solid var(--accent);
+  padding: 2px 0 2px 12px;
+}
+.doc-client-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-dark); font-weight: 700; margin-bottom: 2px; }
 
 /* table-layout: fixed + largeurs figées sur les 3 colonnes numériques : sans ça, une désignation
    avec un mot très long (sans espace) pousse toute la table au-delà de la largeur imprimable et
@@ -217,11 +231,15 @@ input:focus, select:focus {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: var(--text-muted);
+  color: var(--accent-dark);
+  background: #f0fdfa;
   border-bottom: 1px solid var(--border);
-  padding: 8px 6px;
+  padding: 10px 8px;
 }
-.doc-table td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9; }
+.doc-table th:first-child { border-radius: 8px 0 0 8px; }
+.doc-table th:last-child { border-radius: 0 8px 8px 0; }
+.doc-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; }
+.doc-table tbody tr:nth-child(even) { background: #fafbfc; }
 .col-designation { overflow-wrap: break-word; word-break: break-word; }
 .col-qte, .col-pu, .col-total { text-align: right; white-space: nowrap; width: 90px; }
 /* Sous ~600px, les 3 colonnes numériques à 90px ne laissent presque plus de place à la
@@ -234,8 +252,16 @@ input:focus, select:focus {
 }
 
 .doc-totaux { margin-left: auto; width: 280px; }
-.doc-totaux-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.9rem; }
-.doc-total-final { border-top: 2px solid var(--text); margin-top: 4px; padding-top: 10px; font-weight: 700; font-size: 1.1rem; }
+.doc-totaux-row { display: flex; justify-content: space-between; padding: 6px 4px; font-size: 0.9rem; }
+.doc-total-final {
+  background: var(--accent);
+  color: #fff;
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
 
 .doc-footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.78rem; color: var(--text-muted); }
 .watermark { font-style: italic; margin-top: 8px; }
