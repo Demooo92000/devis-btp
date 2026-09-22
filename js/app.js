@@ -1,13 +1,7 @@
 // DevisElec — générateur de devis pour électriciens, 100% côté client (pas de backend en v1).
 // Tout est stocké en local (localStorage) sur l'appareil de l'utilisateur.
-
-// La CSP posée en <meta> dans index.html ne couvre pas frame-ancestors (ignoré par les
-// navigateurs hors en-tête HTTP, que GitHub Pages ne permet pas de définir). Filet best-effort
-// en attendant un hébergement qui permette de vrais en-têtes : contournable par un iframe
-// sandboxé sans allow-top-navigation, mais gratuit et sans risque de casse.
-if (window.top !== window.self) {
-  window.top.location = window.self.location;
-}
+// Le filet anti-clickjacking vit dans js/security.js, chargé avant ce fichier (partagé avec
+// la page d'accueil, qui n'a pas besoin du reste de ce fichier).
 
 // À configurer par 1GeleC : lien de paiement Stripe (Payment Link) pour le déblocage.
 // Success URL du Payment Link à régler sur : <url du site>/?unlocked=1

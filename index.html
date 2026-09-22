@@ -4,168 +4,151 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DevisElec — Générateur de devis pour électriciens</title>
-<meta name="description" content="Créez un devis électricien professionnel en quelques minutes : prestations courantes préremplies, calcul automatique, export PDF.">
+<meta name="description" content="Créez un devis électricien professionnel en quelques minutes : prestations courantes préremplies, calcul automatique, export PDF. Gratuit pour commencer.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'none';">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/print.css" media="print">
+<link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
 
-<header class="topbar no-print">
+<header class="topbar">
   <div class="topbar-inner">
-    <div class="brand">
+    <a class="brand" href="index.html">
       <span class="brand-mark">⚡</span>
       <span class="brand-name">DevisElec</span>
-    </div>
-    <div class="topbar-actions">
-      <span id="unlock-status" class="badge badge-free">Version gratuite</span>
-      <button id="btn-unlock" class="btn btn-accent">Débloquer la version pro</button>
-    </div>
+    </a>
+    <a class="btn btn-primary" href="app.html">Créer mon devis</a>
   </div>
 </header>
 
-<main class="layout">
+<main>
 
-  <section class="panel form-panel no-print">
-
-    <details class="card" id="card-entreprise" open>
-      <summary>Mon entreprise</summary>
-      <div class="card-body grid-2">
-        <label>Nom de l'entreprise
-          <input type="text" id="ent-nom" placeholder="Ex : Dupont Électricité">
-        </label>
-        <label>SIRET
-          <input type="text" id="ent-siret" placeholder="123 456 789 00012">
-        </label>
-        <label class="span-2">Adresse
-          <input type="text" id="ent-adresse" placeholder="12 rue des Artisans, 75000 Paris">
-        </label>
-        <label>Téléphone
-          <input type="tel" id="ent-tel" placeholder="06 12 34 56 78">
-        </label>
-        <label>Email
-          <input type="email" id="ent-email" placeholder="contact@monentreprise.fr">
-        </label>
-        <label class="span-2">Logo (optionnel)
-          <input type="file" id="ent-logo" accept="image/*">
-        </label>
-      </div>
-    </details>
-
-    <details class="card" id="card-client" open>
-      <summary>Client</summary>
-      <div class="card-body grid-2">
-        <label>Nom du client
-          <input type="text" id="cli-nom" placeholder="Ex : M. Martin">
-        </label>
-        <label>Date du devis
-          <input type="date" id="devis-date">
-        </label>
-        <label class="span-2">Adresse du chantier
-          <input type="text" id="cli-adresse" placeholder="5 avenue de la République, 75011 Paris">
-        </label>
-      </div>
-    </details>
-
-    <div class="card">
-      <div class="card-header-row">
-        <h2>Prestations</h2>
-        <button id="btn-add-ligne" class="btn btn-secondary">+ Ajouter une ligne</button>
-      </div>
-      <div class="card-body">
-        <datalist id="prestations-courantes"></datalist>
-        <div id="lignes-container" class="lignes-container"></div>
-      </div>
+  <section class="lp-hero">
+    <div class="lp-hero-text">
+      <h1>Vos devis électricien, prêts en 5 minutes</h1>
+      <p>Prestations courantes préremplies, calcul HT / TVA / TTC automatique,
+        export PDF prêt à envoyer. Gratuit pour commencer.</p>
+      <a class="btn btn-primary btn-lg" href="app.html">Créer mon devis gratuitement →</a>
+      <p class="lp-hero-note">Aucune inscription. Tout reste sur votre appareil.</p>
     </div>
 
-    <div class="card">
-      <div class="card-body grid-2">
-        <label>TVA
-          <select id="tva-taux">
-            <option value="20">20 % (standard / neuf)</option>
-            <option value="10" selected>10 % (rénovation &gt; 2 ans)</option>
-            <option value="5.5">5,5 % (amélioration énergétique)</option>
-            <option value="0">0 % (auto-liquidation / export)</option>
-          </select>
-        </label>
-        <label>Remise (%)
-          <input type="number" id="remise" value="0" min="0" max="100" step="0.5">
-        </label>
-      </div>
+    <div class="lp-hero-visual" aria-hidden="true">
+      <article class="devis-doc lp-mockup">
+        <header class="doc-header">
+          <div class="doc-emetteur">
+            <div class="doc-emetteur-nom">Dupont Électricité</div>
+            <div class="doc-emetteur-details">8 rue des Lilas, 69000 Lyon&#10;06 45 78 12 39</div>
+          </div>
+          <div class="doc-titre">
+            <h1>DEVIS</h1>
+            <div>N° DEV-2026-014</div>
+            <div>Date : 22/09/2026</div>
+          </div>
+        </header>
+        <table class="doc-table">
+          <thead>
+            <tr><th class="col-designation">Désignation</th><th class="col-qte">Qté</th><th class="col-pu">P.U. HT</th><th class="col-total">Total HT</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Point lumineux (va-et-vient)</td><td class="col-qte">2</td><td class="col-pu">65,00 €</td><td class="col-total">130,00 €</td></tr>
+            <tr><td>Prise de courant 16A</td><td class="col-qte">6</td><td class="col-pu">40,00 €</td><td class="col-total">240,00 €</td></tr>
+            <tr><td>Tableau électrique complet</td><td class="col-qte">1</td><td class="col-pu">950,00 €</td><td class="col-total">950,00 €</td></tr>
+          </tbody>
+        </table>
+        <section class="doc-totaux">
+          <div class="doc-totaux-row"><span>Sous-total HT</span><span>1 320,00 €</span></div>
+          <div class="doc-totaux-row"><span>TVA (10 %)</span><span>132,00 €</span></div>
+          <div class="doc-totaux-row doc-total-final"><span>Total TTC</span><span>1 452,00 €</span></div>
+        </section>
+      </article>
     </div>
-
-    <div class="card">
-      <button id="btn-reset" class="btn btn-ghost">Nouveau devis (réinitialiser les lignes)</button>
-    </div>
-
   </section>
 
-  <section class="panel preview-panel">
-    <div class="preview-toolbar no-print">
-      <button id="btn-print" class="btn btn-primary">🖨️ Imprimer / Enregistrer en PDF</button>
+  <section class="lp-features">
+    <h2>Tout ce qu'il faut, rien de plus</h2>
+    <div class="lp-feature-grid">
+
+      <div class="lp-feature">
+        <span class="lp-icon">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 11 14 9 22 21 10 13 10 13 2" fill="currentColor"/></svg>
+        </span>
+        <h3>Prestations préremplies</h3>
+        <p>16 prestations électriques courantes avec prix indicatifs, à ajuster à vos tarifs en un clic.</p>
+      </div>
+
+      <div class="lp-feature">
+        <span class="lp-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"/>
+            <line x1="8" y1="6" x2="16" y2="6"/>
+            <line x1="8" y1="11" x2="8.01" y2="11"/><line x1="12" y1="11" x2="12.01" y2="11"/><line x1="16" y1="11" x2="16.01" y2="11"/>
+            <line x1="8" y1="15" x2="8.01" y2="15"/><line x1="12" y1="15" x2="12.01" y2="15"/><line x1="16" y1="15" x2="16.01" y2="15"/>
+            <line x1="8" y1="19" x2="16" y2="19"/>
+          </svg>
+        </span>
+        <h3>Calcul automatique</h3>
+        <p>HT, TVA (20/10/5,5/0 %), remise : tout se recalcule en direct, sans erreur de calculette.</p>
+      </div>
+
+      <div class="lp-feature">
+        <span class="lp-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/>
+          </svg>
+        </span>
+        <h3>Export PDF</h3>
+        <p>Un devis propre et professionnel, prêt à imprimer ou à envoyer par email.</p>
+      </div>
+
+      <div class="lp-feature">
+        <span class="lp-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="8 12 11 15 16 9"/>
+          </svg>
+        </span>
+        <h3>Gratuit pour commencer</h3>
+        <p>Devis illimités gratuitement. Un seul paiement, à vie, pour retirer la mention DevisElec.</p>
+      </div>
+
     </div>
+  </section>
 
-    <article id="devis-preview" class="devis-doc">
-      <header class="doc-header">
-        <div class="doc-emetteur">
-          <img id="preview-logo" class="doc-logo" alt="" hidden>
-          <div class="doc-emetteur-nom" id="preview-ent-nom">Votre entreprise</div>
-          <div class="doc-emetteur-details" id="preview-ent-details"></div>
-        </div>
-        <div class="doc-titre">
-          <h1>DEVIS</h1>
-          <div id="preview-numero">N° —</div>
-          <div id="preview-date">Date : —</div>
-        </div>
-      </header>
+  <section class="lp-steps">
+    <h2>Comment ça marche</h2>
+    <div class="lp-steps-grid">
+      <div class="lp-step">
+        <span class="lp-step-num">1</span>
+        <h3>Renseignez votre entreprise</h3>
+        <p>Nom, coordonnées, logo — une fois pour toutes, réutilisé sur chaque devis.</p>
+      </div>
+      <div class="lp-step">
+        <span class="lp-step-num">2</span>
+        <h3>Ajoutez vos prestations</h3>
+        <p>Choisissez dans la liste ou tapez la vôtre : quantité et prix se calculent seuls.</p>
+      </div>
+      <div class="lp-step">
+        <span class="lp-step-num">3</span>
+        <h3>Imprimez ou exportez en PDF</h3>
+        <p>Votre devis est prêt à être envoyé au client.</p>
+      </div>
+    </div>
+  </section>
 
-      <section class="doc-client">
-        <div class="doc-client-label">Client</div>
-        <div id="preview-cli-nom">—</div>
-        <div id="preview-cli-adresse">—</div>
-      </section>
-
-      <table class="doc-table">
-        <thead>
-          <tr>
-            <th class="col-designation">Désignation</th>
-            <th class="col-qte">Qté</th>
-            <th class="col-pu">P.U. HT</th>
-            <th class="col-total">Total HT</th>
-          </tr>
-        </thead>
-        <tbody id="preview-lignes"></tbody>
-      </table>
-
-      <section class="doc-totaux">
-        <div class="doc-totaux-row"><span>Sous-total HT</span><span id="preview-sous-total">0,00 €</span></div>
-        <div class="doc-totaux-row" id="preview-remise-row" hidden><span>Remise</span><span id="preview-remise">0,00 €</span></div>
-        <div class="doc-totaux-row"><span id="preview-tva-label">TVA (10 %)</span><span id="preview-tva">0,00 €</span></div>
-        <div class="doc-totaux-row doc-total-final"><span>Total TTC</span><span id="preview-total-ttc">0,00 €</span></div>
-      </section>
-
-      <footer class="doc-footer">
-        <p>Devis valable 3 mois à compter de sa date d'émission. Bon pour accord, précédé de la mention manuscrite, date et signature du client.</p>
-        <p id="preview-watermark" class="watermark">Devis généré avec DevisElec — version gratuite</p>
-      </footer>
-    </article>
+  <section class="lp-cta">
+    <h2>Prêt à gagner du temps sur vos devis ?</h2>
+    <a class="btn btn-primary btn-lg" href="app.html">Créer mon devis gratuitement</a>
   </section>
 
 </main>
 
-<dialog id="dialog-unlock">
-  <div class="dialog-body">
-    <h2>Débloquer DevisElec</h2>
-    <p>La version gratuite ajoute une mention « généré avec DevisElec » en bas de vos devis. Débloquez le compte pour la retirer définitivement, sur ce navigateur.</p>
-    <p class="price">19 € <span>paiement unique</span></p>
-    <a id="lien-stripe-unlock" class="btn btn-accent" href="#" target="_blank" rel="noopener">Débloquer maintenant</a>
-    <button id="dialog-unlock-close" class="btn btn-ghost">Fermer</button>
-    <p class="fine-print">Paiement sécurisé par Stripe. Après paiement, vous revenez automatiquement ici et la version pro est activée sur ce navigateur.</p>
-  </div>
-</dialog>
+<footer class="lp-footer">
+  <p>DevisElec — outil indépendant pour artisans électriciens.</p>
+</footer>
 
-<script src="js/storage.js"></script>
-<script src="js/app.js"></script>
+<script src="js/security.js"></script>
 </body>
 </html>

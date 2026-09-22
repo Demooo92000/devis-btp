@@ -43,7 +43,7 @@ h1, h2 { margin: 0; }
   align-items: center;
   justify-content: space-between;
 }
-.brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.2rem; }
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.2rem; color: inherit; text-decoration: none; }
 .brand-mark { font-size: 1.3rem; }
 .topbar-actions { display: flex; align-items: center; gap: 12px; }
 
@@ -211,7 +211,7 @@ input:focus, select:focus {
 /* table-layout: fixed + largeurs figées sur les 3 colonnes numériques : sans ça, une désignation
    avec un mot très long (sans espace) pousse toute la table au-delà de la largeur imprimable et
    les colonnes numériques disparaissent hors page en PDF (constaté avec un token de 100+ caractères). */
-.doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+.doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; overflow-wrap: break-word; }
 .doc-table th {
   text-align: left;
   font-size: 0.75rem;
@@ -224,6 +224,14 @@ input:focus, select:focus {
 .doc-table td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9; }
 .col-designation { overflow-wrap: break-word; word-break: break-word; }
 .col-qte, .col-pu, .col-total { text-align: right; white-space: nowrap; width: 90px; }
+/* Sous ~600px, les 3 colonnes numériques à 90px ne laissent presque plus de place à la
+   désignation (constaté : "DÉSIGNATION" s'empilait lettre par lettre sur mobile, 375px). Doit
+   rester APRÈS la règle de base ci-dessus : même sélecteur, même spécificité, l'ordre décide. */
+@media (max-width: 600px) {
+  .doc-table { font-size: 0.82rem; }
+  .doc-table th, .doc-table td { padding: 6px 4px; }
+  .col-qte, .col-pu, .col-total { width: 52px; }
+}
 
 .doc-totaux { margin-left: auto; width: 280px; }
 .doc-totaux-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.9rem; }

@@ -1,0 +1,130 @@
+/* Page d'accueil (index.html) — l'outil lui-même vit dans app.html avec css/style.css.
+   Réutilise les tokens (:root), .btn* et .devis-doc/.doc-* de style.css pour rester visuellement
+   cohérent avec l'outil plutôt que de dupliquer une charte graphique séparée. */
+
+body { background: var(--bg); }
+
+main { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+.topbar-inner { justify-content: space-between; }
+
+/* --- Hero --- */
+.lp-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 64px 0 84px;
+}
+.lp-hero-text h1 {
+  font-size: clamp(1.9rem, 3.4vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0 0 18px;
+}
+.lp-hero-text p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin: 0 0 28px;
+  max-width: 460px;
+}
+.lp-hero-note {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 14px 0 0;
+}
+.btn-lg { padding: 14px 26px; font-size: 1.02rem; }
+
+.lp-hero-visual { display: flex; justify-content: center; }
+.lp-mockup {
+  width: 100%;
+  max-width: 420px;
+  transform: rotate(-3deg);
+  box-shadow: 0 30px 60px -18px rgba(15, 23, 42, 0.3), 0 10px 22px -10px rgba(15, 23, 42, 0.18);
+  pointer-events: none;
+  user-select: none;
+  padding: 24px;
+}
+.lp-mockup .doc-table { font-size: 0.78rem; }
+.lp-mockup .doc-titre h1 { font-size: 1.3rem; }
+
+/* --- Fonctionnalités --- */
+.lp-features { padding: 56px 0; text-align: center; }
+.lp-features h2, .lp-steps h2 { font-size: 1.7rem; margin: 0 0 40px; }
+
+.lp-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  text-align: left;
+}
+.lp-feature h3 { font-size: 1rem; margin: 0 0 6px; }
+.lp-feature p { font-size: 0.88rem; color: var(--text-muted); margin: 0; }
+
+.lp-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #ccfbf1;
+  color: var(--accent-dark);
+  margin-bottom: 14px;
+}
+.lp-icon svg { width: 24px; height: 24px; }
+
+/* --- Comment ça marche --- */
+.lp-steps { padding: 40px 0 64px; text-align: center; }
+.lp-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  text-align: left;
+}
+.lp-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.lp-step h3 { font-size: 1rem; margin: 0 0 6px; }
+.lp-step p { font-size: 0.88rem; color: var(--text-muted); margin: 0; }
+
+/* --- CTA finale --- */
+.lp-cta {
+  text-align: center;
+  padding: 56px 32px;
+  margin: 20px 0 64px;
+  background: var(--accent);
+  border-radius: 16px;
+}
+.lp-cta h2 { color: #fff; font-size: 1.6rem; margin: 0 0 24px; }
+.lp-cta .btn-primary { background: #fff; color: var(--accent-dark); }
+.lp-cta .btn-primary:hover { background: #f0fdfa; }
+
+/* --- Pied de page --- */
+.lp-footer {
+  text-align: center;
+  padding: 24px 20px 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 900px) {
+  .lp-hero { grid-template-columns: 1fr; padding: 40px 0 56px; text-align: center; }
+  .lp-hero-text p { margin-left: auto; margin-right: auto; }
+  .lp-mockup { transform: none; max-width: 380px; }
+  .lp-feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .lp-steps-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+}
+
+@media (max-width: 560px) {
+  .lp-feature-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+  .topbar-inner .brand-name { display: none; }
+}
