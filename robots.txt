@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /mentions-legales.html
+Disallow: /cgv.html
+Disallow: /confidentialite.html
+
+Sitemap: https://demooo92000.github.io/devis-btp/sitemap.xml

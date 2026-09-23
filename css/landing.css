@@ -115,6 +115,9 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
   color: var(--text-muted);
   font-size: 0.82rem;
 }
+.lp-footer a { color: var(--text-muted); }
+.lp-footer a:hover { color: var(--accent); }
+.lp-footer p { margin: 4px 0; }
 
 @media (max-width: 900px) {
   .lp-hero { grid-template-columns: 1fr; padding: 40px 0 56px; text-align: center; }

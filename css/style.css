@@ -281,4 +281,14 @@ dialog::backdrop { background: rgba(15, 23, 42, 0.5); }
 .dialog-body .price span { font-size: 0.75rem; font-weight: 400; color: var(--text-muted); }
 .dialog-body .fine-print { font-size: 0.75rem; color: var(--text-muted); }
 
+.legal-footer-nav {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.legal-footer-nav a { color: var(--text-muted); }
+.legal-footer-nav a:hover { color: var(--accent); }
+.legal-footer-nav span { margin: 0 6px; }
+
 .no-print {}
