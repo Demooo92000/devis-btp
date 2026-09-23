@@ -55,6 +55,11 @@ h1, h2 { margin: 0; }
 }
 .badge-free { background: #fef3c7; color: #92400e; }
 .badge-pro { background: #d1fae5; color: #065f46; }
+@media (max-width: 480px) {
+  /* Le texte du badge varie ("3 exports gratuits restants") : sur très petit écran, il tient
+     mieux sur 2 lignes avec une police réduite plutôt que sur 3 lignes à taille normale. */
+  .badge { font-size: 0.68rem; padding: 4px 8px; line-height: 1.3; text-align: center; }
+}
 
 /* Layout */
 .layout {

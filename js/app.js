@@ -7,6 +7,11 @@
 // Success URL du Payment Link à régler sur : <url du site>/?unlocked=1
 const STRIPE_PAYMENT_LINK = '';
 
+// Au-delà, l'export PDF est bloqué tant que l'utilisateur n'a pas débloqué — un vrai palier
+// quantitatif (politique du projet : tout accessible en gratuit, juste limité en quantité),
+// pas seulement une mention cosmétique retirée au paiement.
+const FREE_EXPORTS_LIMIT = 3;
+
 // Un jeu de prestations courantes par corps de métier. Prix indicatifs de marché, pas une
 // source normative — point de départ à ajuster, y compris par l'utilisateur dans le formulaire.
 const METIERS = {
@@ -279,7 +284,7 @@ function wireEvents() {
     persistAndRender();
   });
 
-  document.getElementById('btn-print').addEventListener('click', () => window.print());
+  document.getElementById('btn-print').addEventListener('click', handlePrintClick);
 
   document.getElementById('btn-unlock').addEventListener('click', openUnlockDialog);
   document.getElementById('dialog-unlock-close').addEventListener('click', closeUnlockDialog);
@@ -430,7 +435,19 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function openUnlockDialog() {
+function handlePrintClick() {
+  if (!Storage.isUnlocked() && Storage.getExportCount() >= FREE_EXPORTS_LIMIT) {
+    openUnlockDialog('Vous avez utilisé vos 3 exports PDF gratuits. Débloquez l\'illimité et retirez la mention « généré avec DevisBTP », définitivement, sur ce navigateur.');
+    return;
+  }
+  if (!Storage.isUnlocked()) {
+    Storage.incrementExportCount();
+    applyUnlockedUI(); // reflète le nouveau compteur restant dans le badge
+  }
+  window.print();
+}
+
+function openUnlockDialog(message) {
   const link = document.getElementById('lien-stripe-unlock');
   if (STRIPE_PAYMENT_LINK) {
     link.href = STRIPE_PAYMENT_LINK;
@@ -441,6 +458,9 @@ function openUnlockDialog() {
     link.classList.add('btn-ghost');
     link.textContent = 'Paiement bientôt disponible';
   }
+  const restants = Math.max(0, FREE_EXPORTS_LIMIT - Storage.getExportCount());
+  document.getElementById('dialog-unlock-message').textContent = message
+    || `La version gratuite permet ${FREE_EXPORTS_LIMIT} exports PDF (${restants} restant${restants > 1 ? 's' : ''}). Débloquez l'illimité et retirez la mention « généré avec DevisBTP », définitivement, sur ce navigateur.`;
   document.getElementById('dialog-unlock').showModal();
 }
 
@@ -468,7 +488,8 @@ function applyUnlockedUI() {
     status.className = 'badge badge-pro';
     btnUnlock.hidden = true;
   } else {
-    status.textContent = 'Version gratuite';
+    const restants = Math.max(0, FREE_EXPORTS_LIMIT - Storage.getExportCount());
+    status.textContent = restants > 0 ? `${restants} export${restants > 1 ? 's' : ''} gratuit${restants > 1 ? 's' : ''} restant${restants > 1 ? 's' : ''}` : 'Exports gratuits épuisés';
     status.className = 'badge badge-free';
     btnUnlock.hidden = false;
   }

@@ -34,6 +34,13 @@ const Storage = (() => {
     getMetier: () => get('metier', 'electricien'),
     setMetier: (v) => set('metier', v),
 
+    getExportCount: () => get('export_count', 0),
+    incrementExportCount: () => {
+      const n = get('export_count', 0) + 1;
+      set('export_count', n);
+      return n;
+    },
+
     getNextNumero: () => {
       const annee = new Date().getFullYear();
       const compteurKey = 'compteur_' + annee;
